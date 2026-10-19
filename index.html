@@ -88,7 +88,9 @@ a { color: var(--primary); }
 .panel:first-child { border-radius: 6px 6px 0 0; }
 
 /* Header */
-.topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-block: 14px; }
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-block: 14px; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; }
+/* Keep jump targets clear of the sticky header */
+[id], .q { scroll-margin-top: 90px; }
 .wordmark { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: .02em; text-decoration: none; color: var(--ink); }
 .wordmark .badge { background: var(--primary); color: #fff; padding: 2px 10px; border-radius: 4px; font-size: 1.05rem; }
 .topbar nav a { font-weight: 600; font-size: .9rem; margin-left: 18px; }
@@ -141,7 +143,7 @@ h1 span { color: var(--primary); }
   font-size: .7rem; font-weight: 700; letter-spacing: .03em; color: var(--primary); background: var(--primary-soft);
 }
 
-.progress { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; height: 4px; background: var(--border); margin: 0 0 3px; }
+.progress { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--border); }
 .progress > div { height: 100%; width: 0; background: var(--primary); transition: width .3s ease; }
 
 fieldset.section { border: 0; margin: 0 0 3px; min-width: 0; }
@@ -204,6 +206,22 @@ footer a { color: var(--muted); }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
 html { scroll-behavior: smooth; }
+/* Back-to-top button */
+.to-top {
+  position: fixed; z-index: 20;
+  right: max(16px, calc((100vw - 1000px) / 2 + 16px));
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  width: 48px; height: 48px; border-radius: 50%; border: 0; cursor: pointer;
+  display: grid; place-items: center; background: var(--primary); color: #fff;
+  box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .25);
+  opacity: 0; visibility: hidden; transform: translateY(8px);
+  transition: opacity .2s, transform .2s, visibility .2s, background .15s;
+}
+.to-top.show { opacity: 1; visibility: visible; transform: none; }
+.to-top:hover { background: var(--primary-hover); }
+.to-top:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.to-top svg { width: 22px; height: 22px; }
+
 </style>
 </head>
 <body>
@@ -212,6 +230,7 @@ html { scroll-behavior: smooth; }
   <header class="panel topbar">
     <a class="wordmark" href="https://cui.acm.org/" target="_blank" rel="noopener"><span class="badge">CUI</span> Student Seminar</a>
     <nav><a id="learn-more-nav" href="seminar.html">How it works</a><a href="#signup">Sign up</a></nav>
+    <div class="progress" aria-hidden="true" title="Form progress"><div id="progress-bar"></div></div>
   </header>
 
   <main id="landing">
@@ -251,8 +270,6 @@ html { scroll-behavior: smooth; }
       <p class="section-desc" style="margin:0">The seminar is hosted by the student community of <a href="https://cui.acm.org/" target="_blank" rel="noopener">ACM CUI</a>, the SIGCHI-sponsored conference that has brought together researchers working on speech, chatbots, and conversational AI since 2018.</p>
     </section>
 
-    <div class="progress" aria-hidden="true"><div id="progress-bar"></div></div>
-
     <form id="survey" novalidate>
       <div class="panel form-intro" id="signup">
         <h2>Tell us how you'd like to join</h2>
@@ -281,6 +298,10 @@ html { scroll-behavior: smooth; }
   </footer>
 
 </div></div></div>
+
+<button class="to-top" id="to-top" type="button" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
 
 <script>
 /* ---------- Configuration ---------- */
@@ -532,6 +553,13 @@ form.addEventListener("submit", async e => {
 
 updateBranching();
 updateProgress();
+
+// Back-to-top button: shown once the visitor has scrolled down
+const toTop = document.getElementById("to-top");
+const syncToTop = () => toTop.classList.toggle("show", window.scrollY > 500);
+window.addEventListener("scroll", syncToTop, { passive: true });
+syncToTop();
+toTop.addEventListener("click", () => window.scrollTo({ top: 0 }));
 </script>
 </body>
 </html>
