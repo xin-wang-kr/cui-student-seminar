@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CUI Student Seminar · Sign up</title>
+<meta name="description" content="Present, listen, connect. Sign up for the ACM CUI Student Seminar, an online series featuring emerging researchers in conversational AI.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400..800;1,400..600&display=swap" rel="stylesheet">
+<style>
+/* Palette taken from cui.acm.org/community (community.css) */
+:root {
+  --primary: #C73D4D;
+  --primary-hover: #A93441;
+  --primary-soft: rgba(199, 61, 77, .10);
+  --ink: #212529;
+  --muted: #5c636a;
+  --ground: #eee;
+  --stripe-edge: #bbb;
+  --panel: rgba(238, 238, 238, .85);
+  --panel-solid: #f6f6f6;
+  --field: #fff;
+  --border: rgba(85, 85, 85, .25);
+  --grid: rgba(255, 255, 255, .1);
+  --danger: #b02a37;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary: #d36975;
+    --primary-hover: #df8892;
+    --primary-soft: rgba(211, 105, 117, .16);
+    --ink: #f1f1f1;
+    --muted: rgba(255, 255, 255, .72);
+    --ground: #222;
+    --stripe-edge: #000;
+    --panel: rgba(34, 34, 34, .85);
+    --panel-solid: #2a2a2a;
+    --field: #1b1b1b;
+    --border: rgba(160, 160, 160, .3);
+    --grid: rgba(17, 17, 17, .05);
+    --danger: #ea868f;
+    color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--ground); }
+body {
+  font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px; line-height: 1.6; color: var(--ink);
+}
+a { color: var(--primary); }
+
+/* The signature CUI diagonal stripe band */
+.frame {
+  max-width: 1000px; margin: 0 auto; min-height: 100vh;
+  background: linear-gradient(-135deg,
+    var(--stripe-edge) 0 200px,
+    rgb(81,112,78) 200px 300px, rgb(203,106,115) 300px 400px,
+    rgb(182,81,145) 400px 500px, rgb(81,105,182) 500px 600px,
+    rgb(255,117,11) 600px 700px, rgb(0,161,222) 700px 800px,
+    rgb(255,0,0) 800px 900px, var(--stripe-edge) 900px);
+  background-attachment: fixed;
+}
+.glass {
+  min-height: 100vh;
+  background: color-mix(in srgb, var(--ground) 70%, transparent);
+  backdrop-filter: saturate(180%) blur(10px);
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
+}
+.grid {
+  min-height: 100vh;
+  padding: 3px; padding-top: max(3px, env(safe-area-inset-top));
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0 5px, var(--grid) 5px 6px),
+    repeating-linear-gradient(90deg, transparent 0 5px, var(--grid) 5px 6px);
+  background-size: 10px 10px;
+}
+.panel {
+  background: var(--panel);
+  backdrop-filter: saturate(180%) blur(10px);
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
+  margin-bottom: 3px;
+  padding: clamp(20px, 4vw, 44px);
+}
+.panel:first-child { border-radius: 6px 6px 0 0; }
+
+/* Header */
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-block: 14px; }
+.wordmark { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: .02em; text-decoration: none; color: var(--ink); }
+.wordmark .badge { background: var(--primary); color: #fff; padding: 2px 10px; border-radius: 4px; font-size: 1.05rem; }
+.topbar nav a { font-weight: 600; font-size: .9rem; margin-left: 18px; }
+
+/* Hero */
+.eyebrow { text-transform: uppercase; letter-spacing: .14em; font-size: .78rem; font-weight: 700; color: var(--primary); margin: 0 0 10px; }
+h1 { font-size: clamp(1.9rem, 4.2vw, 3rem); line-height: 1.15; margin: 0 0 18px; font-weight: 800; }
+h1 span { color: var(--primary); }
+.lead { font-size: 1.12rem; max-width: 46rem; margin: 0 0 22px; }
+.slogan {
+  margin: 4px 0 28px; padding: 4px 0 4px 18px; border-left: 4px solid var(--primary);
+  font-size: clamp(1.15rem, 2.3vw, 1.42rem); font-weight: 700; font-style: italic; line-height: 1.35;
+}
+.slogan span { white-space: nowrap; }
+.slogan b { color: var(--primary); font-weight: 800; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+
+.btn {
+  font: inherit; font-weight: 700; cursor: pointer; border-radius: 6px;
+  padding: 12px 22px; border: 1px solid var(--primary); text-decoration: none; display: inline-block;
+}
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+.btn-ghost { background: transparent; color: var(--primary); }
+.btn-ghost:hover { background: var(--primary-soft); }
+.btn:disabled { opacity: .6; cursor: progress; }
+
+/* Two paths */
+.paths { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 3px; }
+.path h2 { font-size: 1.25rem; margin: 0 0 8px; }
+.path p { margin: 0; }
+.path .who { font-size: .85rem; color: var(--muted); font-weight: 600; margin-bottom: 8px; }
+
+.deadline {
+  display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center;
+}
+.deadline .date { background: var(--primary); color: #fff; border-radius: 8px; padding: 10px 16px; text-align: center; font-weight: 800; line-height: 1.15; }
+.deadline .date small { display: block; font-size: .7rem; letter-spacing: .12em; font-weight: 600; opacity: .9; }
+.deadline .date big { font-size: 1.8rem; display: block; }
+.deadline p { margin: 0 0 6px; }
+.deadline p:last-child { margin: 0; color: var(--muted); font-size: .95rem; }
+
+/* Form */
+.form-intro { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; }
+.form-intro h2 { margin: 0; font-size: 1.6rem; }
+.req-note { color: var(--muted); font-size: .9rem; margin: 0; }
+.req { color: var(--primary); font-weight: 700; }
+.req-tag {
+  display: inline-block; vertical-align: 2px; margin-left: 4px; padding: 1px 8px; border-radius: 999px;
+  font-size: .7rem; font-weight: 700; letter-spacing: .03em; color: var(--primary); background: var(--primary-soft);
+}
+
+.progress { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; height: 4px; background: var(--border); margin: 0 0 3px; }
+.progress > div { height: 100%; width: 0; background: var(--primary); transition: width .3s ease; }
+
+fieldset.section { border: 0; margin: 0 0 3px; min-width: 0; }
+.section-head { display: flex; gap: 14px; align-items: baseline; margin-bottom: 6px; }
+.section-num { font-weight: 800; font-size: 2.4rem; line-height: 1; color: var(--primary); opacity: .35; }
+.section h3 { margin: 0; font-size: 1.3rem; }
+.section-desc { color: var(--muted); margin: 0 0 18px; font-size: .95rem; }
+
+.q { padding: 18px 0; border-top: 1px solid var(--border); }
+.q:first-of-type { border-top: 0; }
+.q-label { display: block; font-weight: 600; margin-bottom: 4px; }
+.q-label .n { color: var(--muted); font-weight: 700; margin-right: 6px; }
+.q-hint { color: var(--muted); font-size: .88rem; margin: 0 0 10px; }
+.q-note { font-size: .88rem; margin: 10px 0 0; padding: 10px 12px; border-left: 3px solid var(--primary); background: var(--primary-soft); }
+
+input[type=text], input[type=email], input[type=url], textarea {
+  width: 100%; font: inherit; color: var(--ink); background: var(--field);
+  border: 1px solid var(--border); border-radius: 6px; padding: 11px 13px; margin-top: 6px;
+}
+textarea { min-height: 96px; resize: vertical; }
+input:focus, textarea:focus { outline: 2px solid var(--primary); outline-offset: 1px; border-color: transparent; }
+
+.opts { display: grid; gap: 6px; margin-top: 8px; }
+.opts.cols { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+.opts.days { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); }
+.opt {
+  display: flex; gap: 10px; align-items: flex-start; cursor: pointer;
+  background: var(--field); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px;
+  transition: border-color .15s, background .15s;
+}
+.opt:hover { border-color: var(--primary); }
+.opt input:is([type=radio],[type=checkbox]) { accent-color: var(--primary); margin: 4px 0 0; flex: none; width: 16px; height: 16px; }
+.opt:has(input:checked) { border-color: var(--primary); background: var(--primary-soft); }
+.opt:has(input:focus-visible) { outline: 2px solid var(--primary); outline-offset: 1px; }
+.opt span { flex: 1; }
+.other-input { display: block; margin-top: 6px !important; padding: 7px 10px !important; }
+.opt span { min-width: 0; }
+
+.q.invalid .q-label { color: var(--danger); }
+.q.invalid input[type=text], .q.invalid input[type=email], .q.invalid textarea, .q.invalid .opt { border-color: var(--danger); }
+.err { color: var(--danger); font-size: .85rem; font-weight: 600; margin: 6px 0 0; }
+
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+.submit-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+.status { margin: 0; font-weight: 600; }
+.status.error { color: var(--danger); }
+
+.thanks { text-align: center; padding-block: clamp(40px, 8vw, 90px); }
+.thanks h2 { font-size: 2rem; margin: 0 0 12px; }
+.thanks p { max-width: 36rem; margin: 0 auto 10px; }
+
+footer.panel { font-size: .85rem; color: var(--muted); text-align: center; border-radius: 0 0 6px 6px; padding-block: 22px; margin-bottom: max(3px, env(safe-area-inset-bottom)); }
+footer a { color: var(--muted); }
+
+@media (max-width: 560px) {
+  .deadline { grid-template-columns: 1fr; }
+  .deadline .date { justify-self: start; }
+  .topbar nav a { margin: 0 14px 0 0; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+<div class="frame"><div class="glass"><div class="grid">
+
+  <header class="panel topbar">
+    <a class="wordmark" href="https://cui.acm.org/" target="_blank" rel="noopener"><span class="badge">CUI</span> Student Seminar</a>
+    <nav><a id="learn-more-nav" href="seminar.html">How it works</a><a href="#signup">Sign up</a></nav>
+  </header>
+
+  <main id="landing">
+    <section class="panel">
+      <p class="eyebrow">ACM CUI · Online seminar series · Pilot season Feb 2027</p>
+      <h1>Present. Listen. <span>Connect.</span></h1>
+      <p class="lead">Conversational AI is moving fast, and some of its most exciting ideas are coming from researchers at the start of their careers. The CUI Student Seminar is a new online series that brings that work to you, open to everyone around the world.</p>
+      <p class="slogan"><span><b>One</b> emerging researcher.</span> <span><b>One</b> fresh paper.</span> <span><b>One</b> open conversation.</span></p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#signup">Sign up · about 5 min</a>
+        <a class="btn btn-ghost" id="learn-more" href="seminar.html">Learn how the seminar works</a>
+      </div>
+    </section>
+
+    <section class="paths">
+      <div class="panel path">
+        <p class="who">PhD students · master's researchers · postdocs</p>
+        <h2>Want to present?</h2>
+        <p>Get your work in front of peers worldwide, practice your talk in a friendly room, and walk away with fresh ideas for your next paper, deadline, or defense.</p>
+      </div>
+      <div class="panel path">
+        <p class="who">Everyone, anywhere</p>
+        <h2>Want to listen?</h2>
+        <p>Hear new research straight from the people who did it, ask about the choices and dead ends that never make it into the paper, and meet others working on the same problems you are.</p>
+      </div>
+    </section>
+
+    <section class="panel deadline">
+      <div class="date"><small>SIGN UP BY</small><big>Dec 31</big>2026</div>
+      <div>
+        <p><strong>Now calling the presenter cohort for February 2027.</strong> The pilot's first presenters and attendees will help shape what the seminar becomes.</p>
+        <p>Missed the deadline? You can still submit afterwards, or resubmit for the next series. We'll contact selected presenters one month before their session.</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <p class="section-desc" style="margin:0">The seminar is hosted by the student community of <a href="https://cui.acm.org/" target="_blank" rel="noopener">ACM CUI</a>, the SIGCHI-sponsored conference that has brought together researchers working on speech, chatbots, and conversational AI since 2018.</p>
+    </section>
+
+    <div class="progress" aria-hidden="true"><div id="progress-bar"></div></div>
+
+    <form id="survey" novalidate>
+      <div class="panel form-intro" id="signup">
+        <h2>Tell us how you'd like to join</h2>
+        <p class="req-note">Questions marked <span class="req">*</span> are required. In Sections 2–3, starred questions are required if you're presenting.</p>
+      </div>
+      <div id="sections"></div>
+      <div class="hp" aria-hidden="true"><label>Leave this empty <input type="text" name="_hp" tabindex="-1" autocomplete="off"></label></div>
+      <div class="panel submit-row">
+        <button class="btn btn-primary" type="submit" id="submit-btn">Submit my response</button>
+        <p class="status" id="status" role="status" aria-live="polite"></p>
+      </div>
+    </form>
+  </main>
+
+  <section class="panel thanks" id="thanks" hidden>
+    <p class="eyebrow">Response received</p>
+    <h2>Thank you!</h2>
+    <p>We'll contact selected presenters one month before their session.</p>
+    <p>We'd love your feedback after each session, and we can't wait to see you at the seminar.</p>
+    <p style="margin-top:24px"><a class="btn btn-ghost" href="https://cui.acm.org/community/" target="_blank" rel="noopener">Visit the CUI community</a></p>
+  </section>
+
+  <footer class="panel">
+    ACM Conversational User Interfaces community · Sponsored by ACM SIGCHI ·
+    <a href="https://cui.acm.org/community/" target="_blank" rel="noopener">cui.acm.org/community</a>
+  </footer>
+
+</div></div></div>
+
+<script>
+/* ---------- Configuration ---------- */
+// Paste the Web App URL from your deployed Google Apps Script (see README.md).
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz3Nk1XPHoMO3ueG9Ew7grCesZ-n-FX-U0wTofy3Zw2C0xArSuLgEEZetg1gSWyHLll7Q/exec";
+// Replace with the seminar page on the ACM CUI website once it exists.
+const SEMINAR_PAGE_URL = "seminar.html";
+
+/* ---------- Survey definition ----------
+   req: true = always required; "presenter" = required only if Q7 is "Yes".
+   Each question's `col` becomes the column header in the Google Sheet. */
+const TOPICS = ["Voice user experience", "Speech interfaces", "Text-based conversational interfaces", "Chatbots",
+  "Speech synthesis", "Speech recognition", "Context-aware dialogue management", "Conversational search",
+  "Conversational interface design insights", "Conversational interaction through technology",
+  "Methods for CUI development and evaluation", "Multimodal interaction",
+  "Natural language processing and understanding", "Large language models (LLMs)",
+  "Ethical and privacy considerations"];
+const PRESENT_YES = "Yes, I'd like to present";
+const PRESENT_MAYBE = "Maybe, I'd like more details first";
+const PRESENT_NO = "No, but I'd like to attend";
+
+const SECTIONS = [
+  { title: "About you", questions: [
+    { id: "q1", col: "Full name", type: "text", req: true, auto: "name" },
+    { id: "q2", col: "Email", type: "email", req: true, auto: "email" },
+    { id: "q3", col: "Institution and department", type: "text", req: true, auto: "organization" },
+    { id: "q4", col: "Current stage", type: "radio", req: true, other: true, layout: "cols", options: [
+      "PhD student, 1st year", "PhD student, 2nd year", "PhD student, 3rd year", "PhD student, 4th year",
+      "PhD student, 5th year or beyond", "Master's student", "Undergraduate student", "Postdoc or early-career researcher"] },
+    { id: "q5", col: "Prior involvement with ACM CUI", label: "Have you been involved with ACM CUI before?", hint: "Select all that apply.", type: "checkbox", req: true, options: [
+      "Attended a CUI conference/workshop", "Published at CUI conference",
+      "Student volunteer, Doctoral Consortium, or workshop participant", "Not yet; this is my first CUI activity"] },
+    { id: "q6", col: "How did you hear about this seminar", label: "How did you hear about this seminar?", type: "radio", other: true, layout: "cols", options: [
+      "CUI mailing list or website", "Social media (LinkedIn, Bluesky, etc.)", "CUI Discord", "Advisor or lab mate"] },
+    { id: "q7", col: "Would you like to give a talk", label: "Would you like to give a talk?", hint: "Presenting is open to PhD students, master's researchers, and postdocs.", type: "radio", req: true, options: [
+      PRESENT_YES, PRESENT_MAYBE, PRESENT_NO + " (skip to Section 4)"] },
+  ]},
+  { title: "Your recent work", presenterOnly: true,
+    desc: "We're looking for work published, accepted, or posted in the last 2 years. Earlier work is welcome too if it's still central to your current research.",
+    questions: [
+    { id: "q8", col: "Title of the work", type: "text", req: "presenter" },
+    { id: "q9", col: "Paper link", label: "Link to the paper", hint: "DOI, arXiv, OSF, or project page.", type: "text" },
+    { id: "q10", col: "Status", type: "radio", req: "presenter", layout: "cols",
+      options: ["Published", "Accepted, forthcoming", "Preprint", "Under review"],
+      note: "If your work is under double-blind review, please check the venue's anonymity policy before presenting it publicly." },
+    { id: "q11", col: "Venue and year", label: "Venue and year, if applicable", hint: "e.g., CUI 2026, CHI 2026", type: "text" },
+    { id: "q12", col: "Role on the paper", label: "Your role on the paper", type: "radio", req: "presenter", options: ["First author", "Co-first author", "Co-author with a major contribution"] },
+    { id: "q13", col: "What the work is about", label: "In one or two sentences, what is the work about?", type: "textarea", req: "presenter" },
+    { id: "q14", col: "Main contribution", label: "What is the main contribution?", hint: "Select all that apply.", type: "checkbox", layout: "cols", options: [
+      "Empirical study (lab, field, survey, or interview)", "System, prototype, or design artifact",
+      "Method, measure, or evaluation framework", "Dataset or corpus",
+      "Theoretical, conceptual, or provocation", "Literature review"] },
+    { id: "q15", col: "Topic area", hint: "Select all that apply.", type: "checkbox", req: "presenter", other: true, layout: "cols", options: TOPICS },
+    { id: "q16", col: "Audience takeaway", label: "What would audience members take away from your talk?", hint: "One sentence, e.g., a finding, a design implication, or a method they could reuse.", type: "textarea" },
+    { id: "q17", col: "Another recent work", label: "Do you have another recent work you could present instead or as well?", hint: "Optional; title and link.", type: "textarea" },
+  ]},
+  { title: "Talk details", presenterOnly: true, desc: "Each seminar is one hour and features a single presenter.", questions: [
+    { id: "q18", col: "Preferred talk format", label: "How would you like to split the hour?", type: "radio", req: "presenter", options: [
+      "Discussion-focused: 30 min talk + 30 min Q&A and discussion", "Balanced: 40 min talk + 20 min Q&A",
+      "Talk-focused: 45 min talk + 15 min Q&A", "No preference"] },
+    { id: "q19", col: "Ready to present", label: "When would you be ready to present?", type: "radio", req: "presenter", options: ["February 2027 (pilot season)", "A later session in 2027", "Flexible"] },
+    { id: "q20", col: "Recording permission", label: "May we record and share your talk?", type: "radio", req: "presenter", layout: "cols", options: ["Yes", "No", "Let's discuss"] },
+    { id: "q21", col: "Co-author approval", label: "Have your co-authors (and advisor, if relevant) agreed to you presenting this work?", type: "radio", req: "presenter", options: ["Yes", "Not yet, I'll check with them"] },
+  ]},
+  { title: "When can you join?", desc: "For both presenters and attendees. Please answer in your own local time.", questions: [
+    { id: "q22", col: "Time zone", label: "Your time zone", hint: "Select one; offsets shown for February 2027. We've preselected yours from your device, so please check it.", type: "radio", req: true, other: true, layout: "cols", options: [
+      "UTC−8: Los Angeles, Vancouver, Seattle", "UTC−7: Denver, Phoenix, Calgary", "UTC−6: Chicago, Mexico City",
+      "UTC−5: New York, Toronto, Bogotá", "UTC−4: Halifax, Caracas", "UTC−3: São Paulo, Buenos Aires, Santiago",
+      "UTC+0: London, Dublin, Lisbon", "UTC+1: Paris, Berlin, Amsterdam, Stockholm, Lagos",
+      "UTC+2: Athens, Helsinki, Cairo, Johannesburg", "UTC+3: Istanbul, Moscow, Nairobi, Riyadh", "UTC+3:30: Tehran",
+      "UTC+4: Dubai", "UTC+5: Karachi, Tashkent", "UTC+5:30: India, Sri Lanka", "UTC+6: Dhaka",
+      "UTC+7: Bangkok, Jakarta, Hanoi", "UTC+8: Beijing, Singapore, Hong Kong, Taipei, Perth", "UTC+9: Tokyo, Seoul",
+      "UTC+10: Brisbane", "UTC+11: Sydney, Melbourne", "UTC+13: Auckland"] },
+    { id: "q23", col: "Days that work", label: "Which days work best for you?", hint: "Select all that apply.", type: "checkbox", req: true, layout: "days",
+      options: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] },
+    { id: "q24", col: "Times that work (local)", label: "Which times work best for you, in your local time?", hint: "Select all that apply.", type: "checkbox", req: true, layout: "cols", options: [
+      "Early morning (7:00–9:00)", "Morning (9:00–12:00)", "Midday (12:00–14:00)",
+      "Afternoon (14:00–17:00)", "Evening (17:00–20:00)", "Late evening (20:00–22:00)"] },
+    { id: "q25", col: "How often", label: "How often would you like to join?", type: "radio", options: ["Every session", "Most sessions", "Only when the topic interests me"] },
+    { id: "q26", col: "Topics of interest", label: "Which topics would you most like to hear about?", hint: "Optional; select all that apply.", type: "checkbox", other: true, layout: "cols", options: TOPICS },
+    { id: "q27", col: "Accommodations", label: "Do you need any accommodations to take part?", hint: "Optional; e.g., live captions, or a video platform you can't access from your country.", type: "textarea" },
+  ]},
+  { title: "Staying in touch", desc: "Your responses will be seen only by the seminar organizers and used to plan and schedule sessions. If you present, your name, institution, and talk title will appear in seminar announcements.", questions: [
+    { id: "q28", col: "Consent", label: "I agree to my responses being used as described above.", type: "checkbox", req: true, options: ["I agree"] },
+    { id: "q29", col: "Email updates", label: "Which updates would you like to receive by email?", hint: "Select all that apply.", type: "checkbox", options: [
+      "Upcoming seminar sessions", "CUI calls for papers and deadlines",
+      "Doctoral Consortium and student volunteer opportunities", "Travel grants and student registration support"] },
+    { id: "q30", col: "Researcher recommendation", label: "Know an emerging researcher whose work should be featured?", hint: "Optional; their name and a link to the paper, and we'll reach out to invite them.", type: "textarea" },
+    { id: "q31", col: "Anything else", label: "Anything else you'd like to tell us?", hint: "Optional.", type: "textarea" },
+  ]},
+];
+
+/* ---------- Rendering ---------- */
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+let qNum = 0;
+
+function renderQuestion(q) {
+  qNum++;
+  const label = q.label || q.col;
+  const star = q.req === true ? ' <span class="req" aria-hidden="true">*</span>'
+    : q.req === "presenter" ? ' <span class="req" aria-hidden="true">*</span> <span class="req-tag">Required for presenters</span>' : "";
+  const hint = q.hint ? `<p class="q-hint" id="${q.id}-hint">${esc(q.hint)}</p>` : "";
+  const note = q.note ? `<p class="q-note">${esc(q.note)}</p>` : "";
+  const describedBy = q.hint ? ` aria-describedby="${q.id}-hint"` : "";
+  let body;
+  if (q.type === "radio" || q.type === "checkbox") {
+    const opts = q.options.map((o, i) =>
+      `<label class="opt"><input type="${q.type}" name="${q.id}" value="${esc(o)}" id="${q.id}-${i}"><span>${esc(o)}</span></label>`);
+    if (q.other) opts.push(`<label class="opt"><input type="${q.type}" name="${q.id}" value="__other__" data-other><span>Other:
+      <input type="text" class="other-input" name="${q.id}_other" aria-label="${esc(label)}, other" placeholder="Please specify"></span></label>`);
+    body = `<div class="q-label"><span class="n">${qNum}.</span>${esc(label)}${star}</div>${hint}
+      <div class="opts ${q.layout || ""}" role="${q.type === "radio" ? "radiogroup" : "group"}" aria-label="${esc(label)}"${describedBy}>${opts.join("")}</div>`;
+  } else {
+    const ctl = q.type === "textarea"
+      ? `<textarea id="${q.id}" name="${q.id}"${describedBy}></textarea>`
+      : `<input type="${q.type}" id="${q.id}" name="${q.id}"${q.auto ? ` autocomplete="${q.auto}"` : ""}${describedBy}>`;
+    body = `<label class="q-label" for="${q.id}"><span class="n">${qNum}.</span>${esc(label)}${star}</label>${hint}${ctl}`;
+  }
+  return `<div class="q" data-q="${q.id}">${body}${note}<p class="err" hidden></p></div>`;
+}
+
+$("#sections").innerHTML = SECTIONS.map((s, i) => `
+  <fieldset class="panel section" data-section="${i}"${s.presenterOnly ? " data-presenter" : ""}>
+    <div class="section-head"><span class="section-num">${String(i + 1).padStart(2, "0")}</span><h3>${esc(s.title)}</h3></div>
+    ${s.desc ? `<p class="section-desc">${esc(s.desc)}</p>` : ""}
+    ${s.questions.map(renderQuestion).join("")}
+  </fieldset>`).join("");
+
+document.querySelectorAll("#learn-more, #learn-more-nav").forEach(a => a.href = SEMINAR_PAGE_URL);
+
+// Preselect the time zone using the device's UTC offset in February 2027 (the pilot season)
+try {
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const off = -new Date(2027, 1, 15).getTimezoneOffset();
+  const h = Math.trunc(Math.abs(off) / 60), m = Math.abs(off) % 60;
+  const utc = `UTC${off >= 0 ? "+" : "−"}${h}${m ? ":" + String(m).padStart(2, "0") : ""}`;
+  const match = [...document.querySelectorAll('input[name="q22"]')].find(i => i.value.startsWith(utc + ":"));
+  if (match) match.checked = true;
+  else {
+    document.querySelector('input[name="q22"][data-other]').checked = true;
+    document.querySelector('input[name="q22_other"]').value = `${utc} / ${tz}`;
+  }
+} catch (e) {}
+
+/* ---------- Behaviour ---------- */
+const form = $("#survey");
+const allQuestions = SECTIONS.flatMap(s => s.questions.map(q => ({ ...q, presenterOnly: !!s.presenterOnly })));
+
+function presenting() {
+  const v = (form.querySelector('input[name="q7"]:checked') || {}).value || "";
+  return v.startsWith("No") ? "no" : v === PRESENT_YES ? "yes" : v === PRESENT_MAYBE ? "maybe" : "";
+}
+function updateBranching() {
+  const p = presenting();
+  form.querySelectorAll("[data-presenter]").forEach(fs => {
+    fs.hidden = p === "no";
+    fs.disabled = p === "no";
+  });
+}
+
+function value(q) {
+  if (q.type === "radio" || q.type === "checkbox") {
+    const vals = [...form.querySelectorAll(`input[name="${q.id}"]:checked`)].map(i => {
+      if (i.value !== "__other__") return i.value;
+      const t = form.querySelector(`input[name="${q.id}_other"]`).value.trim();
+      return t ? `Other: ${t}` : "Other";
+    });
+    return vals.join("; ");
+  }
+  return form.elements[q.id].value.trim();
+}
+function isRequired(q) {
+  if (q.presenterOnly && presenting() === "no") return false;
+  return q.req === true || (q.req === "presenter" && presenting() === "yes");
+}
+function validate(q) {
+  const box = form.querySelector(`[data-q="${q.id}"]`);
+  const err = box.querySelector(".err");
+  const v = value(q);
+  let msg = "";
+  if (isRequired(q) && !v) msg = q.id === "q28" ? "Please agree to continue." : "This question is required.";
+  else if (q.type === "email" && v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) msg = "Please enter a valid email address.";
+  else if (/(^|; )Other$/.test(v)) msg = "Please specify your “Other” answer.";
+  box.classList.toggle("invalid", !!msg);
+  err.textContent = msg; err.hidden = !msg;
+  return !msg;
+}
+function updateProgress() {
+  const active = allQuestions.filter(q => !(q.presenterOnly && presenting() === "no"));
+  const done = active.filter(q => value(q)).length;
+  $("#progress-bar").style.width = (100 * done / active.length) + "%";
+}
+
+form.addEventListener("input", e => {
+  // Typing in an "Other" box selects its option
+  if (e.target.classList.contains("other-input") && e.target.value) {
+    e.target.closest(".opt").querySelector("[data-other]").checked = true;
+  }
+  if (e.target.name === "q7") updateBranching();
+  const q = allQuestions.find(q => q.id === (e.target.name || "").replace(/_other$/, ""));
+  if (q && form.querySelector(`[data-q="${q.id}"]`).classList.contains("invalid")) validate(q);
+  updateProgress();
+});
+form.addEventListener("change", e => { if (e.target.name === "q7") updateBranching(); updateProgress(); });
+
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  const status = $("#status"), btn = $("#submit-btn");
+  const invalid = allQuestions.filter(q => !validate(q));
+  if (invalid.length) {
+    status.className = "status error";
+    status.textContent = `Please check ${invalid.length} highlighted question${invalid.length > 1 ? "s" : ""}.`;
+    const first = form.querySelector(`[data-q="${invalid[0].id}"]`);
+    first.scrollIntoView({ block: "center" });
+    first.querySelector("input, textarea")?.focus({ preventScroll: true });
+    return;
+  }
+  if (form.elements._hp.value) return; // bot
+
+  const payload = new URLSearchParams();
+  const skip = presenting() === "no";
+  allQuestions.forEach((q, i) => {
+    payload.append(`Q${i + 1} ${q.col}`, q.presenterOnly && skip ? "" : value(q));
+  });
+  payload.append("Submitted (client)", new Date().toISOString());
+  payload.append("_order", JSON.stringify([...payload.keys()]));
+
+  if (APPS_SCRIPT_URL.startsWith("PASTE_")) {
+    status.className = "status error";
+    status.textContent = "Setup needed: the Google Sheet URL hasn't been configured yet.";
+    console.table(Object.fromEntries(payload));
+    return;
+  }
+
+  btn.disabled = true; status.className = "status"; status.textContent = "Sending…";
+  try {
+    // Apps Script doesn't return CORS headers, so the response is opaque; a network error still throws.
+    await fetch(APPS_SCRIPT_URL, { method: "POST", mode: "no-cors", body: payload });
+    $("#landing").hidden = true;
+    $("#thanks").hidden = false;
+    window.scrollTo(0, 0);
+  } catch (err) {
+    btn.disabled = false;
+    status.className = "status error";
+    status.textContent = "Something went wrong sending your response. Please check your connection and try again.";
+  }
+});
+
+updateBranching();
+updateProgress();
+</script>
+</body>
+</html>

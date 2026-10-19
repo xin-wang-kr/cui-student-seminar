@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CUI Student Seminar</title>
+<meta name="description" content="The ACM CUI Student Seminar: an online series featuring emerging researchers in conversational user interfaces. One emerging researcher. One fresh paper. One open conversation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400..800;1,400..600&display=swap" rel="stylesheet">
+<style>
+/* Palette taken from cui.acm.org/community (community.css); shared with index.html */
+:root {
+  --primary: #C73D4D;
+  --primary-hover: #A93441;
+  --primary-soft: rgba(199, 61, 77, .10);
+  --ink: #212529;
+  --muted: #5c636a;
+  --ground: #eee;
+  --stripe-edge: #bbb;
+  --panel: rgba(238, 238, 238, .85);
+  --field: #fff;
+  --border: rgba(85, 85, 85, .25);
+  --grid: rgba(255, 255, 255, .1);
+  --c-green: rgb(81,112,78); --c-pink: rgb(203,106,115); --c-magenta: rgb(182,81,145);
+  --c-blue: rgb(81,105,182); --c-orange: rgb(255,117,11); --c-cyan: rgb(0,161,222); --c-red: rgb(255,0,0);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary: #d36975;
+    --primary-hover: #df8892;
+    --primary-soft: rgba(211, 105, 117, .16);
+    --ink: #f1f1f1;
+    --muted: rgba(255, 255, 255, .72);
+    --ground: #222;
+    --stripe-edge: #000;
+    --panel: rgba(34, 34, 34, .85);
+    --field: #1b1b1b;
+    --border: rgba(160, 160, 160, .3);
+    --grid: rgba(17, 17, 17, .05);
+    color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--ground); }
+html { scroll-behavior: smooth; }
+body {
+  font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px; line-height: 1.6; color: var(--ink);
+}
+a { color: var(--primary); }
+img { max-width: 100%; }
+
+.frame {
+  max-width: 1000px; margin: 0 auto; min-height: 100vh;
+  background: linear-gradient(-135deg,
+    var(--stripe-edge) 0 200px,
+    var(--c-green) 200px 300px, var(--c-pink) 300px 400px,
+    var(--c-magenta) 400px 500px, var(--c-blue) 500px 600px,
+    var(--c-orange) 600px 700px, var(--c-cyan) 700px 800px,
+    var(--c-red) 800px 900px, var(--stripe-edge) 900px);
+  background-attachment: fixed;
+}
+.glass {
+  min-height: 100vh;
+  background: color-mix(in srgb, var(--ground) 70%, transparent);
+  backdrop-filter: saturate(180%) blur(10px);
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
+}
+.grid {
+  min-height: 100vh;
+  padding: 3px; padding-top: max(3px, env(safe-area-inset-top));
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0 5px, var(--grid) 5px 6px),
+    repeating-linear-gradient(90deg, transparent 0 5px, var(--grid) 5px 6px);
+  background-size: 10px 10px;
+}
+.panel {
+  background: var(--panel);
+  backdrop-filter: saturate(180%) blur(10px);
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
+  margin-bottom: 3px;
+  padding: clamp(20px, 4vw, 44px);
+}
+.panel:first-child { border-radius: 6px 6px 0 0; }
+.row { display: grid; gap: 3px; margin-bottom: 3px; }
+.row > .panel { margin-bottom: 0; }
+
+/* Header */
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 10px 20px; flex-wrap: wrap; padding-block: 14px; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; }
+.wordmark { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: .02em; text-decoration: none; color: var(--ink); }
+.wordmark .badge { background: var(--primary); color: #fff; padding: 2px 10px; border-radius: 4px; font-size: 1.05rem; }
+.topbar nav { display: flex; flex-wrap: wrap; gap: 4px 18px; align-items: center; }
+.topbar nav a { font-weight: 600; font-size: .9rem; }
+.topbar nav a.nav-cta { background: var(--primary); color: #fff; text-decoration: none; padding: 5px 14px; border-radius: 6px; }
+
+/* Hero */
+.hero { display: grid; grid-template-columns: 1.15fr .85fr; gap: 28px; align-items: center; }
+.eyebrow { text-transform: uppercase; letter-spacing: .14em; font-size: .78rem; font-weight: 700; color: var(--primary); margin: 0 0 10px; }
+h1 { font-size: clamp(2rem, 4.4vw, 3.1rem); line-height: 1.12; margin: 0 0 16px; font-weight: 800; }
+h1 span { color: var(--primary); }
+.slogan {
+  margin: 0 0 20px; padding: 4px 0 4px 16px; border-left: 4px solid var(--primary);
+  font-size: clamp(1.05rem, 2vw, 1.25rem); font-weight: 700; font-style: italic; line-height: 1.4;
+}
+.slogan span { white-space: nowrap; }
+.slogan b { color: var(--primary); font-weight: 800; }
+.lead { margin: 0 0 24px; }
+.hero-art svg { width: 100%; height: auto; display: block; }
+
+.btn {
+  font: inherit; font-weight: 700; cursor: pointer; border-radius: 6px;
+  padding: 12px 22px; border: 1px solid var(--primary); text-decoration: none; display: inline-block;
+}
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+.btn-ghost { background: transparent; color: var(--primary); }
+.btn-ghost:hover { background: var(--primary-soft); }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* Section headings */
+.section-head { display: flex; gap: 14px; align-items: baseline; margin-bottom: 8px; flex-wrap: wrap; }
+.section-num { font-weight: 800; font-size: 2.4rem; line-height: 1; color: var(--primary); opacity: .35; }
+h2 { margin: 0; font-size: 1.55rem; }
+.section-desc { color: var(--muted); margin: 0 0 22px; max-width: 46rem; }
+.soon {
+  display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--primary); background: var(--primary-soft); border-radius: 999px; padding: 3px 10px; align-self: center;
+}
+
+/* How it works */
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.fact { background: var(--field); border: 1px solid var(--border); border-radius: 8px; padding: 18px; }
+.fact .k { font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 0 4px; }
+.fact .v { font-size: 1.15rem; font-weight: 800; margin: 0 0 6px; }
+.fact p { margin: 0; font-size: .92rem; }
+.formats { display: grid; gap: 8px; margin-top: 18px; }
+.format { display: grid; grid-template-columns: 9.5rem 1fr; gap: 14px; align-items: center; font-size: .9rem; }
+.format .bar { display: flex; height: 26px; border-radius: 5px; overflow: hidden; font-size: .72rem; font-weight: 700; color: #fff; }
+.format .bar span { display: flex; align-items: center; padding-left: 8px; white-space: nowrap; overflow: hidden; }
+.format .talk { background: var(--primary); }
+.format .qa { background: var(--c-blue); }
+
+/* Schedule placeholder */
+.schedule { display: grid; gap: 8px; }
+.slot {
+  display: grid; grid-template-columns: 5.5rem 1fr auto; gap: 16px; align-items: center;
+  border: 1px dashed var(--border); border-radius: 8px; padding: 14px 18px; background: color-mix(in srgb, var(--field) 55%, transparent);
+}
+.slot .when { font-weight: 800; line-height: 1.2; }
+.slot .when small { display: block; font-weight: 600; color: var(--muted); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; }
+.slot .what { color: var(--muted); }
+.slot .what strong { color: var(--ink); display: block; }
+.skeleton { display: block; height: 10px; border-radius: 5px; background: var(--border); margin-top: 8px; width: min(320px, 80%); }
+.skeleton.short { width: min(200px, 55%); }
+.callout {
+  margin-top: 18px; padding: 14px 16px; border-left: 3px solid var(--primary); background: var(--primary-soft);
+  display: flex; gap: 12px 20px; align-items: center; justify-content: space-between; flex-wrap: wrap;
+}
+.callout p { margin: 0; }
+
+/* Featured research + recordings placeholders */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.card { border: 1px dashed var(--border); border-radius: 8px; overflow: hidden; background: color-mix(in srgb, var(--field) 55%, transparent); }
+.card .art { aspect-ratio: 16 / 9; display: grid; place-items: center; }
+.card .art svg { width: 44px; height: 44px; opacity: .9; }
+.card .body { padding: 14px 16px 18px; }
+.card .body p { margin: 0; font-size: .9rem; color: var(--muted); }
+.card .body strong { display: block; color: var(--ink); margin-bottom: 2px; }
+.art.a1 { background: linear-gradient(135deg, var(--c-pink), var(--c-magenta)); }
+.art.a2 { background: linear-gradient(135deg, var(--c-blue), var(--c-cyan)); }
+.art.a3 { background: linear-gradient(135deg, var(--c-orange), var(--c-red)); }
+.art.v { background: linear-gradient(135deg, #2b2b2b, #4a4a4a); }
+
+/* Organizers */
+.people { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.person {
+  display: flex; gap: 18px; align-items: center; background: var(--field);
+  border: 1px solid var(--border); border-radius: 12px; padding: 18px;
+}
+.person img { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; flex: none; border: 3px solid var(--primary-soft); }
+.person h3 { margin: 0; font-size: 1.1rem; }
+.person .role { margin: 2px 0 8px; font-size: .85rem; color: var(--muted); font-weight: 600; }
+.person .contact { margin: 0; font-size: .9rem; word-break: break-word; }
+.person .contact a { font-weight: 600; }
+.person .site { font-size: .85rem; }
+.ask { margin: 20px 0 0; font-weight: 600; }
+
+footer.panel { font-size: .85rem; color: var(--muted); text-align: center; border-radius: 0 0 6px 6px; padding-block: 22px; margin-bottom: max(3px, env(safe-area-inset-bottom)); }
+footer a { color: var(--muted); }
+
+@media (max-width: 760px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-art { max-width: 360px; }
+  .topbar { position: static; }
+}
+@media (max-width: 520px) {
+  .slot { grid-template-columns: 1fr; gap: 6px; }
+  .slot .soon { justify-self: start; }
+  .format { grid-template-columns: 1fr; gap: 4px; }
+  .person { flex-direction: column; text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<div class="frame"><div class="glass"><div class="grid">
+
+  <header class="panel topbar">
+    <a class="wordmark" href="#top"><span class="badge">CUI</span> Student Seminar</a>
+    <nav aria-label="Page sections">
+      <a href="#how">How it works</a>
+      <a href="#schedule">Schedule</a>
+      <a href="#research">Featured research</a>
+      <a href="#recordings">Recordings</a>
+      <a href="#organizers">Organizers</a>
+      <a class="nav-cta" href="index.html#signup">Sign up</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="panel hero">
+      <div>
+        <h1>ACM CUI Student <span>Seminar</span></h1>
+        <p class="slogan"><span><b>One</b> emerging researcher.</span> <span><b>One</b> fresh paper.</span> <span><b>One</b> open conversation.</span></p>
+        <p class="lead">A new online series from the student community of ACM CUI, bringing early-career research on speech, chatbots, and conversational AI to everyone around the world. The pilot season launches in <strong>February 2027</strong>.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="index.html#signup">Present or attend</a>
+          <a class="btn btn-ghost" href="#organizers">Contact the organizers for questions</a>
+        </div>
+      </div>
+      <!-- Concept illustration: a speaker's waveform meeting an audience's replies -->
+      <div class="hero-art" aria-hidden="true">
+        <svg viewBox="0 0 360 320" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#C73D4D"/><stop offset="1" stop-color="rgb(182,81,145)"/></linearGradient>
+            <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="rgb(81,105,182)"/><stop offset="1" stop-color="rgb(0,161,222)"/></linearGradient>
+          </defs>
+          <!-- presenter bubble -->
+          <path d="M28 40h196a20 20 0 0 1 20 20v86a20 20 0 0 1-20 20H86l-32 28v-28H28a20 20 0 0 1-20-20V60a20 20 0 0 1 20-20z" fill="url(#g1)"/>
+          <g fill="#fff" opacity=".95">
+            <rect x="40" y="96" width="8" height="16" rx="4"/><rect x="56" y="84" width="8" height="40" rx="4"/>
+            <rect x="72" y="72" width="8" height="64" rx="4"/><rect x="88" y="88" width="8" height="32" rx="4"/>
+            <rect x="104" y="66" width="8" height="76" rx="4"/><rect x="120" y="80" width="8" height="48" rx="4"/>
+            <rect x="136" y="92" width="8" height="24" rx="4"/><rect x="152" y="76" width="8" height="56" rx="4"/>
+            <rect x="168" y="86" width="8" height="36" rx="4"/><rect x="184" y="96" width="8" height="16" rx="4"/>
+            <rect x="200" y="99" width="8" height="10" rx="4"/>
+          </g>
+          <!-- audience reply bubble -->
+          <path d="M156 178h176a20 20 0 0 1 20 20v62a20 20 0 0 1-20 20h-32v28l-32-28H156a20 20 0 0 1-20-20v-62a20 20 0 0 1 20-20z" fill="url(#g2)"/>
+          <g fill="#fff"><circle cx="210" cy="229" r="9"/><circle cx="244" cy="229" r="9" opacity=".8"/><circle cx="278" cy="229" r="9" opacity=".6"/></g>
+          <!-- small participant dots -->
+          <circle cx="300" cy="62" r="14" fill="rgb(255,117,11)"/><circle cx="330" cy="104" r="9" fill="rgb(81,112,78)"/>
+          <circle cx="292" cy="128" r="6" fill="rgb(203,106,115)"/><circle cx="54" cy="262" r="12" fill="rgb(0,161,222)"/>
+          <circle cx="92" cy="292" r="7" fill="rgb(255,0,0)" opacity=".8"/>
+        </svg>
+      </div>
+    </section>
+
+    <section class="panel" id="how">
+      <div class="section-head"><span class="section-num">01</span><h2>How it works</h2></div>
+      <p class="section-desc">Each session is a relaxed, hour-long conversation with one presenter about one recent paper, with plenty of time for the questions that never make it into the paper.</p>
+      <div class="facts">
+        <div class="fact"><p class="k">Format</p><p class="v">1 hour · 1 presenter</p><p>A talk on one recent paper, followed by Q&amp;A and open discussion.</p></div>
+        <div class="fact"><p class="k">Who presents</p><p class="v">Emerging researchers</p><p>PhD students, master's researchers, and postdocs, on work from the last two years.</p></div>
+        <div class="fact"><p class="k">Who attends</p><p class="v">Everyone, online</p><p>Open to anyone interested in conversational user interfaces, anywhere in the world.</p></div>
+        <div class="fact"><p class="k">When</p><p class="v">From Feb 2027</p><p>The pilot season starts in February 2027. Times are planned around sign-ups' availability.</p></div>
+      </div>
+      <div class="formats" aria-label="Session formats presenters can choose from">
+        <div class="format"><strong>Discussion-focused</strong><div class="bar"><span class="talk" style="width:50%">30 min talk</span><span class="qa" style="width:50%">30 min Q&amp;A</span></div></div>
+        <div class="format"><strong>Balanced</strong><div class="bar"><span class="talk" style="width:66.7%">40 min talk</span><span class="qa" style="width:33.3%">20 min Q&amp;A</span></div></div>
+        <div class="format"><strong>Talk-focused</strong><div class="bar"><span class="talk" style="width:75%">45 min talk</span><span class="qa" style="width:25%">15 min</span></div></div>
+      </div>
+    </section>
+
+    <section class="panel" id="schedule">
+      <div class="section-head"><span class="section-num">02</span><h2>Schedule</h2><span class="soon">Coming soon</span></div>
+      <p class="section-desc">We're putting together the presenter cohort for the pilot season. Sessions, speakers, and joining links will be posted here once confirmed.</p>
+      <div class="schedule">
+        <div class="slot"><div class="when"><small>Feb 2027</small>Session 1</div><div class="what"><strong>Speaker to be announced</strong><span class="skeleton"></span></div><span class="soon">TBA</span></div>
+        <div class="slot"><div class="when"><small>2027</small>Session 2</div><div class="what"><strong>Speaker to be announced</strong><span class="skeleton short"></span></div><span class="soon">TBA</span></div>
+        <div class="slot"><div class="when"><small>2027</small>Session 3</div><div class="what"><strong>Speaker to be announced</strong><span class="skeleton"></span></div><span class="soon">TBA</span></div>
+      </div>
+      <div class="callout">
+        <p><strong>Want to present in the pilot season?</strong> Sign up by December 31, 2026.</p>
+        <a class="btn btn-primary" href="index.html#signup">Sign up</a>
+      </div>
+    </section>
+
+    <section class="panel" id="research">
+      <div class="section-head"><span class="section-num">03</span><h2>Featured emerging research</h2><span class="soon">Coming soon</span></div>
+      <p class="section-desc">Each presenter's paper will be featured here, with a short summary, the key takeaway for the audience, and a link to read the work.</p>
+      <div class="cards">
+        <div class="card"><div class="art a1"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></div><div class="body"><strong>Paper to be announced</strong><p>Voice, chat, or multimodal: the first featured work arrives with the pilot season.</p></div></div>
+        <div class="card"><div class="art a2"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></div><div class="body"><strong>Paper to be announced</strong><p>Know someone whose work should be here? Tell us in the sign-up form.</p></div></div>
+        <div class="card"><div class="art a3"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></div><div class="body"><strong>Paper to be announced</strong><p>Or present your own: sign-ups for February 2027 are open now.</p></div></div>
+      </div>
+    </section>
+
+    <section class="panel" id="recordings">
+      <div class="section-head"><span class="section-num">04</span><h2>Recordings</h2><span class="soon">Coming soon</span></div>
+      <p class="section-desc">Missed a session? With each presenter's permission, talks will be recorded and shared here so you can watch them at a time that suits you.</p>
+      <div class="cards">
+        <div class="card"><div class="art v"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10.4-6.5a1 1 0 0 0 0-1.8L9.5 4.6A1 1 0 0 0 8 5.5z"/></svg></div><div class="body"><strong>First recording after the pilot launch</strong><p>Check back after the first sessions in February 2027.</p></div></div>
+        <div class="card"><div class="art v"><svg viewBox="0 0 24 24" fill="#fff" opacity=".6"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10.4-6.5a1 1 0 0 0 0-1.8L9.5 4.6A1 1 0 0 0 8 5.5z"/></svg></div><div class="body"><strong>More to follow</strong><p>Want to hear about new recordings? Choose "Upcoming seminar sessions" when you sign up.</p></div></div>
+      </div>
+    </section>
+
+    <section class="panel" id="organizers">
+      <div class="section-head"><span class="section-num">05</span><h2>Organizers</h2></div>
+      <p class="section-desc">The seminar is run by the student representatives on the ACM CUI Steering Committee.</p>
+      <div class="people">
+        <div class="person">
+          <img src="images/vision-wang.jpeg" alt="Photo of Vision (Xin) Wang" width="96" height="96">
+          <div>
+            <h3>Vision (Xin) Wang</h3>
+            <p class="role">Student Representative, ACM CUI Steering Committee</p>
+            <p class="contact">Email: <a href="mailto:xwang314@binghamton.edu">xwang314@binghamton.edu</a></p>
+            <a class="site" href="https://xin-wang-kr.github.io/" target="_blank" rel="noopener">Website</a>
+          </div>
+        </div>
+        <div class="person">
+          <img src="images/yohan-hmaiti.jpg" alt="Photo of Yohan Hmaiti" width="96" height="96">
+          <div>
+            <h3>Yohan Hmaiti</h3>
+            <p class="role">Student Representative, ACM CUI Steering Committee</p>
+            <p class="contact">Email: <a href="mailto:Yohan.Hmaiti@ucf.edu">Yohan.Hmaiti@ucf.edu</a></p>
+            <a class="site" href="https://cs.ucf.edu/icerc/isuelab/people/yohan/" target="_blank" rel="noopener">Website</a>
+          </div>
+        </div>
+      </div>
+      <p class="ask">Have a question about presenting, attending, or the seminar in general? Reach out to either of us. We're happy to help.</p>
+    </section>
+  </main>
+
+  <footer class="panel">
+    Hosted by the student community of <a href="https://cui.acm.org/" target="_blank" rel="noopener">ACM Conversational User Interfaces</a>
+  </footer>
+
+</div></div></div>
+</body>
+</html>
